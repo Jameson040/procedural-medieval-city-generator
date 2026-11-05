@@ -4,6 +4,19 @@ A procedural medieval settlement and city generator built with **TypeScript**, *
 
 ---
 
+## 📖 About The Project
+
+This project simulates how medieval settlements organically formed, expanded, and defended themselves over centuries. Rather than placing buildings randomly, it implements a computational geometry pipeline that respects terrain, historical urban development patterns, and tactical fortification logic.
+
+### How It Works Under the Hood:
+1. **Topography & Geography**: Generates a relaxed Voronoi planar mesh with seeded value noise. Rivers carve through natural topological contours, establishing natural boundaries and bridging points.
+2. **Tactical Fortifications & Anchors**: Places defensible citadels using terrain elevation, salient corner evaluation, and water protection scoring. Defensive curtain walls, moats, barbicans, gatehouses, and posterns adapt dynamically around urban density.
+3. **Organic Road & District Growth**: Arterials connect external trade routes to central plazas and cathedral squares. Wards and specialized districts (merchant guilds, artisanal quarters, slums, docks) expand based on geographic anchors.
+4. **Burgage Parceling & Footprints**: Subdivides cells into burgage plots, creating historically proportional housing, perimeter market stalls, aisled cathedrals, and keeps that never unnaturally scale with plot dimensions.
+5. **Interactive CAD-like Canvas**: Allows world builders and developers to fine-tune maps in real time: dragging junctions, adjusting walls, placing custom gates, and exporting production-ready vector SVG or high-res raster assets for tabletop RPGs and game engines.
+
+---
+
 ## ✨ Features
 
 - **Settlement Tiers by Population**:
