@@ -1,0 +1,10 @@
+import { createCtx, buildMesh, makeRiver, selectCity, classifyEdges } from '../src/engine/plan';
+import { DEFAULT_PARAMS } from '../src/engine/params';
+const { ctx } = createCtx({ ...DEFAULT_PARAMS, seed: 'set40', population: 40 }, 'set40');
+console.log('R', ctx.R, 'N', ctx.N, 'blocks', ctx.city.settlement.blocks, 'radius', ctx.city.settlement.radius);
+buildMesh(ctx);
+console.log('cells', ctx.city.cells.length, 'city cells before', ctx.city.cells.filter(c=>c.kind==='city').length);
+selectCity(ctx);
+const cc = ctx.city.cells.filter(c=>c.kind==='city');
+console.log('city cells after', cc.length, cc.map(c=>c.id));
+console.log('nbrs of city cells', cc.map(c=>c.nbrs.map(n=>n>=0?ctx.city.cells[n].kind:'-').join(',')).join(' | '));

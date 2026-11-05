@@ -1,0 +1,13 @@
+import { generateCity } from '../src/engine/generate';
+import { DEFAULT_PARAMS } from '../src/engine/params';
+import { satOverlap } from '../src/engine/geom';
+import { partPoly, repairOverlaps } from '../src/engine/buildings';
+const c = generateCity({ ...DEFAULT_PARAMS, seed: 'ft30000royal', identity: 'royal', population: 30000 });
+const b1 = c.buildings.find(b=>b.id===5200)!, b2 = c.buildings.find(b=>b.id===5202)!;
+console.log('b1', b1?.type, b1?.bb, 'parts', b1?.parts.length, JSON.stringify(b1?.parts[0].p));
+console.log('b2', b2?.type, b2?.bb, 'parts', b2?.parts.length, JSON.stringify(b2?.parts[0].p));
+const pa = partPoly(b1.parts[0]), pb = partPoly(b2.parts[0]);
+console.log('sat0.26', satOverlap(pa,pb,0.26), 'sat0.2', satOverlap(pa,pb,0.2), 'sat0', satOverlap(pa,pb,0));
+const st = {repaired:0,dropped:0};
+repairOverlaps(c, st);
+console.log('repair stats', st, 'b1 still there?', !!c.buildings.find(b=>b.id===5200), 'b2', !!c.buildings.find(b=>b.id===5202));

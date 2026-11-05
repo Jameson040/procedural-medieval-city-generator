@@ -1,0 +1,21 @@
+import { writeFileSync } from 'fs';
+import { generateCity } from '../src/engine/generate';
+import { DEFAULT_PARAMS } from '../src/engine/params';
+import { SvgContext } from '../src/engine/svgctx';
+import { drawMap, drawFrame, DEFAULT_OPTS } from '../src/engine/render';
+import { Resvg } from '@resvg/resvg-js';
+const [,, seed='x', identity='merchant', theme='daylight', pop='6000', out='/tmp/city'] = process.argv;
+const city = generateCity({ ...DEFAULT_PARAMS, seed, identity: identity as any, population: +pop });
+console.log(city.name, city.settlement.tier, 'pop', city.settlement.population, 'blocks', city.settlement.blocks, 'bldgs', city.buildings.length, city.report.errors);
+let bb = [Infinity,Infinity,-Infinity,-Infinity];
+for (const c of city.cells) if (c.kind==='city') for (const v of c.vids) { const p=city.verts[v]; bb=[Math.min(bb[0],p[0]),Math.min(bb[1],p[1]),Math.max(bb[2],p[0]),Math.max(bb[3],p[1])]; }
+const m = Math.max(60, (bb[2]-bb[0])*0.12);
+const x0=bb[0]-m,y0=bb[1]-m,x1=bb[2]+m,y1=bb[3]+m;
+const W=x1-x0,H=y1-y0; const px=1500; const scale=px/W;
+const g = new SvgContext(x0,y0,W,H);
+drawMap(g as any, city, { ...DEFAULT_OPTS, theme: theme as any, scale, view:[x0,y0,x1,y1], terrain:true });
+drawFrame(g as any, city, x0,y0,W,H, W/1200, 1, theme as any, true);
+const svg = g.toString();
+writeFileSync(out+'.svg', svg);
+const r = new Resvg(svg, { fitTo: { mode: 'width', value: px }, font: { loadSystemFonts: true } });
+writeFileSync(out+'.png', r.render().asPng());
